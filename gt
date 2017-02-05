@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os 
 import subprocess
 import sys
 
@@ -11,22 +12,39 @@ def git(args):
 
 def parse_logs():
     logs = git("log")
-    commits = [x for x
+    commits = [get_commit(x) for x
                    in logs.split("\n")
                    if x.startswith("commit ")]
-    aaa = [puts(x) for x in logs.split("commit ")]
+    messages = [get_messages(x) for x in logs.split("commit ") if len(x) > 0]
+    [puts(x) for x in zip(range(0,100),commits, messages)]
+    user_input = int(raw_input("number: ")) 
+    commit_num = commits[user_input]
+    copy_to_clipboard(commit_num)
+
+def copy_to_clipboard(text):
+    os.system("echo '%s' | pbcopy" % text)
 
 def puts(x):
-    print x
+    print "{}: {} {}".format(x[0], x[1], x[2])
     return x
+
+def is_commit_message(line):
+    return not (line.startswith("Author: ") or line.startswith("Date: ") or line == "")
+
+def get_messages(line):
+    return  [x.strip() for x in line.split("\n") if is_commit_message(x) ][1:] 
 
 def get_commit(x):
     return x.strip("commit").strip()[0:9]
 
+def help():
+    return "\ngt [lc] ... copy target log commit number to clopboard\n"
+
+
 if len(sys.argv) < 2:
-    sys.exit("\nyou need argument\n") 
+    sys.exit("\nyou need argument\n" + help()) 
 
 option = sys.argv[1]
 
-if option == "log":
+if option == "lc":
     parse_logs()
