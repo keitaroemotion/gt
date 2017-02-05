@@ -44,8 +44,14 @@ def copy_to_clipboard(text):
     os.system("echo '%s' | pbcopy" % text)
 
 def puts(x):
-    print "{}: {} {}".format(x[0], x[1], reduce(lambda x, y: x + y, x[2]))[0:70] + ".."
-    return x
+    try:
+        print "{}: {} {}".format(
+            x[0],
+            x[1],
+            reduce(lambda x, y: x + y, x[2]))[0:70] + ".."
+    except TypeError:        
+        pass
+      
 
 def is_commit_message(line):
     return not (line.startswith("Author: ") or line.startswith("Date: ") or line == "")
