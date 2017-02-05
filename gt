@@ -12,14 +12,20 @@ def git(args):
 
 def parse_logs():
     logs = git("log")
-    commits = [get_commit(x) for x
-                   in logs.split("\n")
-                   if x.startswith("commit ")]
-    messages = parse([get_messages(x) for x in logs.split("commit ") if len(x) > 0])
-    i = 0
-    for sub_commits in parse(commits):
-        parse_log(logs, sub_commits, messages[i])
-        i = i + 1
+    commits = [
+        get_commit(x)
+            for x
+            in logs.split("\n")
+            if x.startswith("commit ")]
+
+    messages = parse([
+        get_messages(x) 
+            for x
+            in logs.split("commit ")
+            if len(x) > 0])
+
+    for sub_commits in zip(range(0,4), parse(commits)):
+        parse_log(logs, sub_commits[1], messages[sub_commits[0]])
 
 def parse(arr):
     return [arr[i:i+5] for i in range(0,len(arr),5)]               
