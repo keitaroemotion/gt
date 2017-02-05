@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+from subprocess import call
+import sys
+
+def system(command):
+    call(command.split())
+
+def git(args):
+    system(reduce(lambda x, y: x + y, args, "git "))
+
+option = sys.argv[1]
+
+if option == "log":
+    git("log")
