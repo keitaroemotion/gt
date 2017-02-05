@@ -52,7 +52,6 @@ def puts(x):
     except TypeError:        
         pass
       
-
 def is_commit_message(line):
     return not (line.startswith("Author: ") or line.startswith("Date: ") or line == "")
 
