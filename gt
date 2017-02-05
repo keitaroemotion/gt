@@ -15,17 +15,30 @@ def parse_logs():
     commits = [get_commit(x) for x
                    in logs.split("\n")
                    if x.startswith("commit ")]
-    messages = [get_messages(x) for x in logs.split("commit ") if len(x) > 0]
-    [puts(x) for x in zip(range(0,100),commits, messages)]
-    user_input = int(raw_input("number: ")) 
-    commit_num = commits[user_input]
-    copy_to_clipboard(commit_num)
+    messages = parse([get_messages(x) for x in logs.split("commit ") if len(x) > 0])
+    i = 0
+    for sub_commits in parse(commits):
+        parse_log(logs, sub_commits, messages[i])
+        i = i + 1
+
+def parse(arr):
+    return [arr[i:i+5] for i in range(0,len(arr),5)]               
+
+
+def parse_log(logs, commits, messages):
+    [puts(x) for x in zip(range(0,len(commits)), commits, messages)]
+    user_input = raw_input("number[q:quit]: ")
+    if user_input.isdigit():
+       commit_num = commits[int(user_input)]
+       copy_to_clipboard(commit_num)
+    if user_input == "q":
+       sys.exit("done.")
 
 def copy_to_clipboard(text):
     os.system("echo '%s' | pbcopy" % text)
 
 def puts(x):
-    print "{}: {} {}".format(x[0], x[1], x[2])
+    print "{}: {} {}".format(x[0], x[1], reduce(lambda x, y: x + y, x[2]))[0:70] + ".."
     return x
 
 def is_commit_message(line):
