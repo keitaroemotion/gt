@@ -1,9 +1,6 @@
-============
-  gt
-============
-------------
+# gt
+
 Your git extension tool
-------------
 
 Tagret OS: Mac OSX
 (if you want this on Linux or any other Unix like system you need to 
@@ -21,3 +18,8 @@ $ gt lc
 `
 
 [index]: [hashnum] [message]
+
+# Author
+
+twitter: @keisuganodev
+tobasojyo@gmail.com
